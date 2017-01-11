@@ -1,8 +1,6 @@
 # cascaded_exploding_bar_chart
 Create a cascade of two or more exploding bar-charts from data with controllable typesetting.
 
-A graphical example for an exploding bar-chart can be found below.
-
 ## Features
 1. Size of bars and the number of bars is generated from data
 2. Hight of bars: raw data, normalized or percentage (each bar normalized individually)
