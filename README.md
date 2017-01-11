@@ -2,24 +2,21 @@
 Create a cascade of two or more exploding bar-charts from data with controllable typesetting.
 
 ## Features
-1. Size of bars and the number of bars is generated from data
-2. Hight of bars: raw data, normalized or percentage (each bar normalized individually)
-3. One consecutive set of boxes in each bar can be given emphasis
+1. Size of bars in, and the total number of bar-charts is generated from data
+2. Hight of bars based on raw data, normalized or percentage (each bar normalized individually)
+3. A consecutive set of boxes in each bar can be given emphasis
 4. Explosion lines to show relation between stacked bars
 5. The explosion wedge can have labels and a shaded background
-6. stacked bar and boxes can have labels
+6. Stacked bars and boxes can have labels
 7. Box labels will not display when text is to big for box (controllable)
-
+8. Only matplotlib needed
+9. Most textual and graphical elements can be typeset without chaning the code
 
 ![See graphic below for an rough example](/example.jpg?raw=true "")    
     
-    
 ## Usage
-Default type setting is simple and for the default matplotlib figure size. 
-When type setting change the variables in the global (I know, I know)
-variable 'exp_barch_tp_set'.
-       
-Then call cascaded_exploding_barcharts()
+Call cascaded_exploding_barcharts() with your data. If you want to typeset you
+have to do this before the call.
 
 ## Input arguments cascaded_exploding_barcharts
 
@@ -55,8 +52,11 @@ Then call cascaded_exploding_barcharts()
             label printing is controlled. Also offset might needs to be adapted
 
 ## Typesetting
-Typesetting is done by changing the settings in the global var
-exp_barch_tp_set. This should be done before calling cascaded_exploding_barcharts
+
+Typesetting is controlled by changing the variables in the global variable
+ 'exp_barch_tp_set' (A global,I know, I know).
+Default typesetting is for the default matplotlib figure size and of a simple nature
+changing the typesetting should be done before calling cascaded_exploding_barcharts()
 
     Control features (True/False):
         box_label: Print the labels in the boxes 
@@ -64,20 +64,19 @@ exp_barch_tp_set. This should be done before calling cascaded_exploding_barchart
         explode_label: Print labels between the explode lines
         explode_bg: Give the wedge between the explosion lines a color
 
-
     box_size_text_cutoff: Controls the automatic check if text is to big for a
         box (Default looks ok for standard matplotlib figure size).
 
 The other options are either text offsets -or-
 dictionaries forwarded to either axes.bar axes.line or axes.text functions 
-see matplotlib documentation for more information. 
+(see matplotlib documentation for more information). 
 
-The "zorder" is used to correct stack the different graphical elements. It
+The "zorder" is used to correctly stack the different graphical elements. It
 is not advisable to change these settings.
 
-It is possible to use names color names instead of the #rgb used for all 
-typesettings EXCEPT the bar color. The gradient method is simplistic and 
-will fail for non #rgb entries.
+It is possible to use named color names instead of the #rgb used currently for 
+typesettings EXCEPT the bar color. The gradient method for the border
+is simplistic (borderline buggy / broken) and will fail for non #rgb entries.
 
 ## Graphical example
 ```              
@@ -104,3 +103,5 @@ will fail for non #rgb entries.
 5. Check if raw plotting wedges are correct
 6. It is possible to use a 'darkened' color for the box border. Lighting
    should also be possible, but rgb is hard
+   
+Keywords: python matplotlib exploding exploded barchart barcharts bar-chart bar-charts cascaded cascading 
