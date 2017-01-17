@@ -17,7 +17,7 @@ Create a cascade of two or more exploding bar-charts from data with controllable
 6. Stacked bars and boxes can have labels
 7. Box labels will not display when text is to big for box (controllable)
 8. Only matplotlib needed
-9. Most textual and graphical elements can be typeset without chaning the code
+9. Most textual and graphical elements can be typeset without changing the code
 
 ![See graphic below for an rough example](/example.jpg?raw=true "")    
     

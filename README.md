@@ -4,13 +4,13 @@ Create a cascade of two or more exploding bar-charts from data with controllable
 ## Features
 1. Size of bars in, and the total number of bar-charts is generated from data
 2. Hight of bars based on raw data, normalized or percentage (each bar normalized individually)
-3. A consecutive set of boxes in each bar can be given emphasis
+3. Show multiple labeled relationships between stacks
 4. Explosion lines to show relation between stacked bars
 5. The explosion wedge can have labels and a shaded background
 6. Stacked bars and boxes can have labels
 7. Box labels will not display when text is to big for box (controllable)
 8. Only matplotlib needed
-9. Most textual and graphical elements can be typeset without chaning the code
+9. Most textual and graphical elements can be typeset without changing the code
 
 ![See graphic below for an rough example](/example.jpg?raw=true "")    
     
@@ -29,18 +29,16 @@ have to do this before the call.
             See run_example() for detailed example of data structure
 
     emphasis: The entries in the bar-chart to emphasize and explode from and TO
-            It is a 3d array: A list of paired ranges
+            4d array: A list of list of triples, setting the range and the label
             The first range gives the emphasis in the source bar stack
             The second range gives the target for the explosion lines (starting
             from the emphasized range)
             e.g. To create the explosion lines in the graphical example you
-            would use paired range: [[1,2],[1,2]] 
+            would use range: [[1,2,"EL"],[1,2,"EL"]] 
+            Use None for a tripled pair not wanting emphasis 
 
     bar_labels: An optional label to be printed above each stack bar-chart
             (BL in the graphical example)
-
-    explosion_labels: Labels to be placed between the explosion lines. 
-            (EL in the graphical example)
 
     representation: string
             "None": display data without normalizing (could results in 
