@@ -1,6 +1,8 @@
 # cascaded_exploding_bar_chart
 Create a cascade of two or more exploding bar-charts from data with controllable typesetting.
 
+![See graphic below for an rough example](/example.jpg?raw=true "") 
+
 ## Features
 1. Size of bars in, and the total number of bar-charts is generated from data
 2. Hight of bars based on raw data, normalized or percentage (each bar normalized individually)
@@ -11,8 +13,6 @@ Create a cascade of two or more exploding bar-charts from data with controllable
 7. Box labels will not display when text is to big for box (controllable)
 8. Only matplotlib needed
 9. Most textual and graphical elements can be typeset without changing the code
-
-![See graphic below for an rough example](/example.jpg?raw=true "")    
     
 ## Usage
 Call cascaded_exploding_barcharts() with your data. If you want to typeset you
@@ -29,7 +29,7 @@ have to do this before the call.
             See run_example() for detailed example of data structure
 
     emphasis: The entries in the bar-chart to emphasize and explode from and TO
-            4d array: A list of list of triples, setting the range and the label
+            It is a 3d array: A list of triples, setting the range and the label
             The first range gives the emphasis in the source bar stack
             The second range gives the target for the explosion lines (starting
             from the emphasized range)
