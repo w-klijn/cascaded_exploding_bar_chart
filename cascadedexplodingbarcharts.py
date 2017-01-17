@@ -36,18 +36,15 @@ have to do this before the call.
             See run_example() for detailed example of data structure
 
     emphasis: The entries in the bar-chart to emphasize and explode from and TO
-            It is a 3d array: A list of paired ranges
+            It is a 3d array: A list of tripled, setting the range and the label
             The first range gives the emphasis in the source bar stack
             The second range gives the target for the explosion lines (starting
             from the emphasized range)
             e.g. To create the explosion lines in the graphical example you
-            would use paired range: [[1,2],[1,2]] 
+            would use range: [[1,2,"EL"],[1,2,"EL"]] 
 
     bar_labels: An optional label to be printed above each stack bar-chart
             (BL in the graphical example)
-
-    explosion_labels: Labels to be placed between the explosion lines. 
-            (EL in the graphical example)
 
     representation: string
             "None": display data without normalizing (could results in 
@@ -125,9 +122,17 @@ def run_example():
             [[2,"foo_1", "#3F8080"],[.2,"foo_2", "#346080"], [.3,"foo_3", "#30A280"],
              [0.4,"bar_1", "#CFA080"], [0.4,"bar_2", "#C08080"], [0.5,"bar_3", "#CB8060"]]]
 
-    emphasis = [[[3,5],[3,5]],    [[1,2],[1,2]],   [[None, None],[None, None]]]
-    bar_labels = ["140", "90", "60"]
+    emphasis = [[[3,5,"80"],[3,5,"30"]],    
+                [[1,2, "40"],[1,2, "10"]],  
+                [[None, None, None],[None, None, None]]]
+    
     explosion_labels = [["80", "30"],["40", "10"]]
+
+
+
+    bar_labels = ["140", "90", "60"]
+
+
 
     ##############
     # Type setting
@@ -382,7 +387,7 @@ def explosion_line_x_points(stack_idx=0):
            [stack_idx + 0.50, stack_idx + 0.99]
 
 
-def display_explosion(ax, data, emphasis, explosion_labels, representation, chart_id=0):
+def display_explosion(ax, data, emphasis, representation, chart_id=0):
     """
     Helper function to draw the explosion lines and labels
     """
@@ -398,17 +403,17 @@ def display_explosion(ax, data, emphasis, explosion_labels, representation, char
 
     # Add text at the centre to show the size of the 'sum'
         # Add the label of the bar (if there)
-    if exp_barch_tp_set["explode_label"] and explosion_labels:
+    if exp_barch_tp_set["explode_label"]:
         #left side text
 
         ax.text(chart_id + exp_barch_tp_set["explode_label_offset_left"], 
                 (ys_top_line[0] + ys_bottom_line[0]) / 2, 
-                explosion_labels[0],
+                emphasis[0][2],
                   **exp_barch_tp_set["explode_label_text"])
 
         ax.text(chart_id + exp_barch_tp_set["explode_label_offset_right"], 
                 (ys_top_line[1] + ys_bottom_line[1]) / 2 , 
-                explosion_labels[1],
+                emphasis[1][2],
                   **exp_barch_tp_set["explode_label_text"])
     
     # Draw a gray background between the explosion lines
@@ -456,7 +461,6 @@ def normalize_or_percentage_data(data, representation=None):
                  entry[0] = (entry[0] / sum ) * size_bar
 
 def cascaded_exploding_barcharts(ax, data, emphasis, bar_labels,
-                                 explosion_labels,
                                  representation=None):
     """
     Insert a cascaded exploding barchart into ax
@@ -474,13 +478,12 @@ def cascaded_exploding_barcharts(ax, data, emphasis, bar_labels,
             The second range gives the target for the explosion lines (starting
             from the emphasized range
             e.g. To create the explosion lines in the graphical example you
-            would use paired range: [[1,2],[1,2]] 
+            would use paired range: [[1,2,"left"],[1,2,"right"]] 
 
     bar_labels: An optional label to be printed above each stack bar-chart
             (EL in the graphical example)
 
-    explosion_labels: Labels to be placed between the explosion lines. 
-            (EL in the graphical example)
+
 
     representation: None, display data without normalizing (could results in
             different hight bars!)
@@ -501,9 +504,10 @@ def cascaded_exploding_barcharts(ax, data, emphasis, bar_labels,
 
     # Todo this -1 is ugly!! but needed for the explosion lines: I like the
     # location better at this place in the loop
-    for idx in range(len(data_internal)-1):               
+    for idx in range(len(data_internal)-1):    
+                   
         display_explosion(ax, data_internal, emphasis[idx],
-                           explosion_labels[idx],representation, chart_id=idx)
+                          representation, chart_id=idx)
         create_bar_chart_with_emphasis(ax, data_internal[idx+1], 
                 emphasis[idx+1], bar_labels[idx+1], 
                 idx+1)
