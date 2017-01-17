@@ -122,14 +122,10 @@ def run_example():
             [[2,"foo_1", "#3F8080"],[.2,"foo_2", "#346080"], [.3,"foo_3", "#30A280"],
              [0.4,"bar_1", "#CFA080"], [0.4,"bar_2", "#C08080"], [0.5,"bar_3", "#CB8060"]]]
 
-    emphasis = [[[3,5,"80"],[3,5,"30"]],    
-                [[1,2, "40"],[1,2, "10"]],  
-                [[None, None, None],[None, None, None]]]
+    emphasis = [[[[3,5,"80"],[3,5,"30"]],],    
+                [[[1,2, "40"],[1,2, "10"]],],  
+                [None,],]    
     
-    explosion_labels = [["80", "30"],["40", "10"]]
-
-
-
     bar_labels = ["140", "90", "60"]
 
 
@@ -147,7 +143,7 @@ def run_example():
 
     ############################
     # Main call to functionality
-    cascaded_exploding_barcharts(ax, data, emphasis, bar_labels, explosion_labels,
+    cascaded_exploding_barcharts(ax, data, emphasis, bar_labels, 
                                  "percentage")
 
     ##############################
@@ -251,26 +247,19 @@ def create_bar_chart_with_emphasis(ax, data, emphasis = None,
         renderer = ax.figure.canvas.get_renderer()
 
     # If we have data in the emphasis array get the ranges
-    if emphasis and emphasis[0]:
-        emph=True
-        # emphasis[0] Can contain None, [idx, None], [None, idx], or [idx, idx2] 
-        # Convert to a valid list of entries
-        first_emph_idx = 0                # The bottom
-        last_emph_idx = len(data)      # The top
+    # We can have multiple ranges, create a list of emphasis boxes
+    emph_boxes = []
+    if emphasis and emphasis[0]:   
+        emph = True
+        # we can have one or more emphasis description
+        for emph_entry in emphasis:
+            # plus one to get inclusive range
 
-        # You need to say explicit that you want the whole bar emph
-        if emphasis[0][0] is None and emphasis[0][0] is None:
-            emph = False
-
-        if emphasis[0][0]:  # bottom
-            first_emph_idx = emphasis[0][0]
-
-        if emphasis[0][1]:  # Top
-            # Ugly but we use a range in the next step so add 1
-            last_emph_idx = emphasis[0][1] + 1  
-
+            for idx in range(emph_entry[0][0], emph_entry[0][1] + 1):
+                emph_boxes.append(idx)
     else:
         emph = False
+
 
     # The boxes are drawn from bottom to top. This causes emphasis box top
     # line to be overdrawn of there are more written after. Save the top fat box
@@ -281,7 +270,7 @@ def create_bar_chart_with_emphasis(ax, data, emphasis = None,
         (value, label, color) = data[idx]
         box_settings = exp_barch_tp_set["normal_box"]
         # If we are drawing with emph and we are in the range
-        if emph and idx >= first_emph_idx and idx < last_emph_idx:
+        if emph and idx in emph_boxes:
                 box_settings = exp_barch_tp_set["emphasis_box"]
 
 
@@ -499,6 +488,8 @@ def cascaded_exploding_barcharts(ax, data, emphasis, bar_labels,
     normalize_or_percentage_data(data_internal, representation)
 
     # First bar is created outside of the loop, because we to explode n-1 times
+
+
     create_bar_chart_with_emphasis(ax, data_internal[0], emphasis[0], bar_labels[0],
                                    0)
 
@@ -506,8 +497,10 @@ def cascaded_exploding_barcharts(ax, data, emphasis, bar_labels,
     # location better at this place in the loop
     for idx in range(len(data_internal)-1):    
                    
-        display_explosion(ax, data_internal, emphasis[idx],
+        display_explosion(ax, data_internal, emphasis[idx][0],
                           representation, chart_id=idx)
+
+
         create_bar_chart_with_emphasis(ax, data_internal[idx+1], 
                 emphasis[idx+1], bar_labels[idx+1], 
                 idx+1)
