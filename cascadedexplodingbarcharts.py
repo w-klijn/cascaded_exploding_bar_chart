@@ -11,7 +11,7 @@ Create a cascade of two or more exploding bar-charts from data with controllable
 ## Features
 1. Size of bars in, and the total number of bar-charts is generated from data
 2. Hight of bars based on raw data, normalized or percentage (each bar normalized individually)
-3. A consecutive set of boxes in each bar can be given emphasis
+3. Show multiple labeled relationships between stacks
 4. Explosion lines to show relation between stacked bars
 5. The explosion wedge can have labels and a shaded background
 6. Stacked bars and boxes can have labels
@@ -36,12 +36,13 @@ have to do this before the call.
             See run_example() for detailed example of data structure
 
     emphasis: The entries in the bar-chart to emphasize and explode from and TO
-            It is a 3d array: A list of tripled, setting the range and the label
+            It is a 3d array: A list of triples, setting the range and the label
             The first range gives the emphasis in the source bar stack
             The second range gives the target for the explosion lines (starting
             from the emphasized range)
             e.g. To create the explosion lines in the graphical example you
             would use range: [[1,2,"EL"],[1,2,"EL"]] 
+            Use None for a tripled pair not wanting emphasis 
 
     bar_labels: An optional label to be printed above each stack bar-chart
             (BL in the graphical example)
@@ -122,13 +123,11 @@ def run_example():
             [[2,"foo_1", "#3F8080"],[.2,"foo_2", "#346080"], [.3,"foo_3", "#30A280"],
              [0.4,"bar_1", "#CFA080"], [0.4,"bar_2", "#C08080"], [0.5,"bar_3", "#CB8060"]]]
 
-    emphasis = [[[[3,5,"80"],[3,5,"30"]],],    
+    emphasis = [[[[1,2,"30"],[1,2,"60"]], [[4,5,"30"],[4,5,"10"]]],  #2 wedges with emphasis 
                 [[[1,2, "40"],[1,2, "10"]],],  
                 [None,],]    
     
     bar_labels = ["140", "90", "60"]
-
-
 
     ##############
     # Type setting
@@ -315,13 +314,14 @@ def explosion_line_y_top_and_bottom(data, emphasis):
     """
     top = 0.
     bottom = 0.   
+
     if emphasis is None:
         return   # early exit, but no return because, there might be emph on right
-    
+
     for i, (value, label, color) in enumerate(data):           
         top += value  # We need the top so always add  
         # If we have found the data index for the top box
-        if emphasis[-1] is i:    # If none it will never match and just
+        if emphasis[1] is i:    # If none it will never match and just
             break # fall out the loop
 
         # Now bottom box
@@ -496,9 +496,9 @@ def cascaded_exploding_barcharts(ax, data, emphasis, bar_labels,
     # Todo this -1 is ugly!! but needed for the explosion lines: I like the
     # location better at this place in the loop
     for idx in range(len(data_internal)-1):    
-                   
-        display_explosion(ax, data_internal, emphasis[idx][0],
-                          representation, chart_id=idx)
+        for emphasis_subset in emphasis[idx]:
+            display_explosion(ax, data_internal, emphasis_subset,
+                              representation, chart_id=idx)
 
 
         create_bar_chart_with_emphasis(ax, data_internal[idx+1], 
