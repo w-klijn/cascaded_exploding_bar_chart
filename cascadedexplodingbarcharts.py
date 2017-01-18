@@ -394,13 +394,14 @@ def display_explosion(ax, data, emphasis, representation, chart_id=0):
         # Add the label of the bar (if there)
     if exp_barch_tp_set["explode_label"]:
         #left side text
-
-        ax.text(chart_id + exp_barch_tp_set["explode_label_offset_left"], 
+        if not emphasis[0][2] is None:
+            ax.text(chart_id + exp_barch_tp_set["explode_label_offset_left"], 
                 (ys_top_line[0] + ys_bottom_line[0]) / 2, 
                 emphasis[0][2],
                   **exp_barch_tp_set["explode_label_text"])
 
-        ax.text(chart_id + exp_barch_tp_set["explode_label_offset_right"], 
+        if not emphasis[1][2] is None:
+            ax.text(chart_id + exp_barch_tp_set["explode_label_offset_right"], 
                 (ys_top_line[1] + ys_bottom_line[1]) / 2 , 
                 emphasis[1][2],
                   **exp_barch_tp_set["explode_label_text"])
