@@ -190,8 +190,13 @@ exp_barch_tp_set = {
                           "style":'italic', "zorder":4},
     #offset left label
     "explode_label_offset_left": 0.52,
+    # Correction in vertical position (used when the wedges are skewed up or down)
+    # v_offset controlls the magnitude of the correction 0 = no correction
+    "explode_label_v_offset_left": 0.15, 
+
     #offset right side label
     "explode_label_offset_right": 0.83,
+    "explode_label_v_offset_right": 0.6,
 
     "explode_bg":True,
     "explode_bg_xs_offset":0.009,
@@ -380,6 +385,9 @@ def display_explosion(ax, data, emphasis, representation, chart_id=0):
     """
     Helper function to draw the explosion lines and labels
     """
+    if emphasis is None:
+        return
+
     # The start and endpoints of the exploding line depends on the data
     ys_bottom_line, ys_top_line = explosion_line_y_points(
                             data[chart_id], data[chart_id+1], emphasis)
@@ -393,16 +401,37 @@ def display_explosion(ax, data, emphasis, representation, chart_id=0):
     # Add text at the centre to show the size of the 'sum'
         # Add the label of the bar (if there)
     if exp_barch_tp_set["explode_label"]:
-        #left side text
+        # The vertical location of the label might be a little offset if the 
+        # wedge has a large vertical shift to the next bar
+        # Use the explode_label_offset combined with the ys_top_line and bottom
+        # line to create an interpolation location which is better
+        mid_left = (ys_top_line[0] + ys_bottom_line[0]) / 2
+        mid_right = (ys_top_line[1] + ys_bottom_line[1]) / 2
+        # Calculate side and direction of shift between bards
+        midline_dx = mid_right - mid_left
+
+        # left side of 
+        left_cor = exp_barch_tp_set["explode_label_v_offset_left"]
+        left_offset = exp_barch_tp_set["explode_label_offset_left"] 
+        # Calculate some fraction based on the offset and the width
+        fraction_away_from_left = left_offset / .50
+        # magnitude correction * fraction times the dx = correction
+        correction_left = left_cor * fraction_away_from_left * midline_dx
         if not emphasis[0][2] is None:
             ax.text(chart_id + exp_barch_tp_set["explode_label_offset_left"], 
-                (ys_top_line[0] + ys_bottom_line[0]) / 2, 
+                mid_left + correction_left, 
                 emphasis[0][2],
                   **exp_barch_tp_set["explode_label_text"])
 
+
+        # Detail explanantion can be found in left side of correctopm
+        right_cor = exp_barch_tp_set["explode_label_v_offset_right"]
+        right_offset = exp_barch_tp_set["explode_label_offset_right"] 
+        fraction_away_from_right = (1 - right_offset ) / .50  
+        correction_right = - right_cor * fraction_away_from_right * midline_dx
         if not emphasis[1][2] is None:
             ax.text(chart_id + exp_barch_tp_set["explode_label_offset_right"], 
-                (ys_top_line[1] + ys_bottom_line[1]) / 2 , 
+                mid_right  + correction_right, 
                 emphasis[1][2],
                   **exp_barch_tp_set["explode_label_text"])
     
