@@ -21,7 +21,7 @@ Fully typeset example [1]
 5. Explosion lines to show relation between stacked bars
 6. The explosion wedge can have labels and a shaded background
 7. Stacked bars and boxes can have labels
-8. Box labels will not display when text is to big for box (controllable)
+8. Box labels will not display when text is too big for the box (controllable)
 9. Only matplotlib needed
 10. Most textual and graphical elements can be typeset without changing the code
     
