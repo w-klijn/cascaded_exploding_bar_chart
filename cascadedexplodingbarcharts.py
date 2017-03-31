@@ -182,6 +182,12 @@ exp_barch_tp_set = {
     # Offset of text from left side of bars
     "bar_label_offset": 0.15,
 
+    # The relative bar settings
+    "relative":True,
+    "relative_box":{ "width":0.04, "lw":0, "zorder":5, "hatch":"-", 
+                    "edgecolor":"#ffffff"}, # The color with - is not displayed correctly. always grayish
+    "relative_box_h_offset": -0.005,
+
     # Line type for the lines between the bars
     "exploding_line":{'color':'k', "ls":'--', "lw":1.0, "zorder":4},
     # Label between the explosion lines
@@ -234,6 +240,7 @@ def convert_color(color, multiplicateion_factor=1.0):
 
 def create_bar_chart_with_emphasis(ax, data, emphasis = None,
                                    bar_label = None,
+                                   bar_sum = None,
                                    stack_idx = 0):
     """
     Create a stacked bar-chart with some bars emphasised and a lable in the box
@@ -310,6 +317,14 @@ def create_bar_chart_with_emphasis(ax, data, emphasis = None,
         text_var = ax.text(stack_idx + exp_barch_tp_set["bar_label_offset"],
                           pos_sum, bar_label,
                           **exp_barch_tp_set["bar_label_text"])
+
+    # Add the relative size bar
+    # TODO: Make selectable
+    if exp_barch_tp_set["relative"]:
+        ax.bar(stack_idx + exp_barch_tp_set["relative_box_h_offset"],
+           bar_sum, bottom=0, color='k', 
+                    align='edge', 
+                    label=label, **exp_barch_tp_set["relative_box"])
 
 
 def explosion_line_y_top_and_bottom(data, emphasis):
@@ -462,22 +477,38 @@ def display_explosion(ax, data, emphasis, representation, chart_id=0):
       
 def normalize_or_percentage_data(data, representation=None):
     """
-    Ugly quick and dirty normalization or percentage version of the input data
+    Normalization or percentage version of the input data
+    Returns the total bar size (possibly normalized) for relative bar plotting
     """
-    if not representation is None:
-        for bar in data:
-            #Calculate the sum
-            sum = 0.
-            for entry in bar:
-                sum += entry[0]
+    
+    bar_sums = []
+    first_bar_sum = None
+    for bar in data:
+        #Calculate the sum (also needed for the relative bar length)
+        sum = 0.
+        for entry in bar:
+            sum += entry[0]
 
+        # If we are processing the first bar
+        if first_bar_sum is None:
+            first_bar_sum = sum
+
+        if not representation is None:
             #now normalize or percentage
             size_bar = 1.0
             if representation == "percentage":
                 size_bar = 100.0  # %
 
+            norm_sum = None
             for entry in bar:
-                 entry[0] = (entry[0] / sum ) * size_bar
+                    norm_sum = (entry[0] / sum ) * size_bar
+                    entry[0] = norm_sum
+
+            bar_sums.append((sum / first_bar_sum) * size_bar )
+        else:
+            bar_sums.append(sum)
+
+    return bar_sums
 
 def cascaded_exploding_barcharts(ax, data, emphasis, bar_labels,
                                  representation=None):
@@ -515,12 +546,12 @@ def cascaded_exploding_barcharts(ax, data, emphasis, bar_labels,
     """
     # Get a deep copy to allow mutations on the data for normalization
     data_internal = copy.deepcopy(data)
-    normalize_or_percentage_data(data_internal, representation)
+    bar_sums = normalize_or_percentage_data(data_internal, representation)
 
     # First bar is created outside of the loop, because we to explode n-1 times
 
 
-    create_bar_chart_with_emphasis(ax, data_internal[0], emphasis[0], bar_labels[0],
+    create_bar_chart_with_emphasis(ax, data_internal[0], emphasis[0], bar_labels[0], bar_sums[0],
                                    0)
 
     # Todo this -1 is ugly!! but needed for the explosion lines: I like the
@@ -532,7 +563,7 @@ def cascaded_exploding_barcharts(ax, data, emphasis, bar_labels,
 
 
         create_bar_chart_with_emphasis(ax, data_internal[idx+1], 
-                emphasis[idx+1], bar_labels[idx+1], 
+                emphasis[idx+1], bar_labels[idx+1], bar_sums[idx+1],
                 idx+1)
         
 
