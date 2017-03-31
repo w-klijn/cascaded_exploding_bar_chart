@@ -8,18 +8,22 @@ import matplotlib.patches as patches
 # cascaded_exploding_bar_chart
 Create a cascade of two or more exploding bar-charts from data with controllable typesetting.
 
-![See graphic below for an rough example](/example.jpg?raw=true "") 
+![See graphic below for an rough example](/example.png?raw=true "") 
+
+Fully typeset example [1]
+![See graphic below for an rough example](/full_example.png?raw=true "") 
 
 ## Features
 1. Size of bars in, and the total number of bar-charts is generated from data
 2. Hight of bars based on raw data, normalized or percentage (each bar normalized individually)
-3. Show multiple labeled relationships between stacks
-4. Explosion lines to show relation between stacked bars
-5. The explosion wedge can have labels and a shaded background
-6. Stacked bars and boxes can have labels
-7. Box labels will not display when text is to big for box (controllable)
-8. Only matplotlib needed
-9. Most textual and graphical elements can be typeset without changing the code
+3. Option to display a relative size bar when normalizing the data
+4. Show multiple labeled relationships between stacks
+5. Explosion lines to show relation between stacked bars
+6. The explosion wedge can have labels and a shaded background
+7. Stacked bars and boxes can have labels
+8. Box labels will not display when text is to big for box (controllable)
+9. Only matplotlib needed
+10. Most textual and graphical elements can be typeset without changing the code
     
 ## Usage
 Call cascaded_exploding_barcharts() with your data. If you want to typeset you
@@ -108,6 +112,10 @@ is simplistic (borderline buggy / broken) and will fail for non #rgb entries.
 5. Check if raw plotting wedges are correct
 6. It is possible to use a 'darkened' color for the box border. Lighting
    should also be possible, but rgb is hard
+
+## References:
+[1] "ASSET for JULIA: executing massive parallel spike correlation analysis on a KNL cluster";
+  Carlos Canova, Wouter Klijn, Et. Al. ;HBP student conference; 2017
    
 Keywords: python matplotlib exploding exploded barchart barcharts bar-chart bar-charts cascaded cascading 
 """
