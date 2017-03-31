@@ -15,7 +15,7 @@ Fully typeset example [1]
 
 ## Features
 1. Size of bars in, and the total number of bar-charts is generated from data
-2. Hight of bars based on raw data, normalized or percentage (each bar normalized individually)
+2. height of bars based on raw data, normalized or percentage (each bar normalized individually)
 3. Option to display a relative size bar when normalizing the data
 4. Show multiple labeled relationships between stacks
 5. Explosion lines to show relation between stacked bars
@@ -53,8 +53,8 @@ have to do this before the call.
 
     representation: string
             "None": display data without normalizing (could results in 
-                    different hight bars!)
-            "normalized": normalize bar hight
+                    different height bars!)
+            "normalized": normalize bar height
             "percentage": normalize and multiply with 100 for %
             
             This settings has influence on the y-axis labels and how the 
